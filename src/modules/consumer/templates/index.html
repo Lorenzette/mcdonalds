@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faça seu pedido</title>
+  <link rel="stylesheet" href="/mcdonalds-menu/src/shared/styles/style.css" />
+  <link rel="stylesheet" href="/mcdonalds-menu/src/modules/consumer/styles/style.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul class="sidebar">
+        <li onclick="hideSidebar()">
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+              <path
+                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="/mcdonalds-menu/src/modules/consumer/templates/index.html">Fazer Pedido</a>
+        </li>
+        <li>
+          <a href="#">Mudar usuário</a>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <a href="#">Mc da shopee</a>
+        </li>
+        <li class="hideOnMobile">
+          <a href="/mcdonalds-menu/src/modules/consumer/templates/index.html">Fazer Pedido</a>
+        </li>
+        <li class="hideOnMobile">
+          <a href="#">Mudar usuário</a>
+        </li>
+        <li onclick="showSidebar()">
+          <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px"
+              fill="#000000">
+              <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" /></svg></a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+  </main>
+  <footer></footer>
+
+  <script src="/mcdonalds-menu/src/shared/scripts/main.js"></script>
+</body>
+
+</html>

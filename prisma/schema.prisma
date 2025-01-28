@@ -1,0 +1,22 @@
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:senha@localhost:3306/menu" 
+}
+
+generator client{
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String
+  kcal          Int
+}
+
+model Order {
+  id            Int       @id @default(autoincrement())
+  userName      String    
+  products      Json
+  status        String @default("pending")
+}
