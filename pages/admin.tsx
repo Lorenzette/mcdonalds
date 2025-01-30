@@ -1,46 +1,107 @@
-import React, {useState} from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function AdminPage(){
-    const [name, setName] = useState('');
-    const[description, setDescription] = useState('');
-    const[kcal, setKcal] = useState('');
-    
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    kcal: number;
+}
+
+export default function AdminPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+    useEffect(() => {
+    fetchProducts();}, []);
+
+    async function fetchProducts() {
         try {
-            const response = await axios.post('/api/products', {
-                name,
-                description,
-                kcal,
-            });
-            alert('Produto cadastrado com sucesso!');
-            setName('');
-            setDescription('');
-            setKcal('');
-        } catch(error){
-            alert('Erro ao cadastrar produto.');
+        const response = await axios.get("/api/products");
+        setProducts(response.data);
+        } catch (error) {
+        alert("Erro ao buscar produtos.");
         }
-    };
-    return (
-        <div>
-            <h1>Cadastro de Produtos:</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Nome do produto:</label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-                </div>
-                <div>
-                    <label>Descrição:</label>
-                    <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} required />
-                </div>
-                <div>
-                    <label>Calorias:</label>
-                    <input type="text" value={kcal} onChange={(e) => setKcal(e.target.value)} required />
-                </div>
-                <button type='submit'>Cadastrar Produto</button>
+    }
+
+    async function handleDelete(id: number) {
+        if (confirm("Tem certeza que deseja deletar este produto?")) {
+            try {
+                await axios.delete("/api/products", { data: { id } });
+                fetchProducts();
+            } catch (error) {
+                alert("Erro ao deletar produto.");
+            }
+        }
+    }
+
+    async function handleUpdate(event: React.FormEvent) {
+        event.preventDefault();
+        if (editingProduct) {
+            try {
+                await axios.put("/api/products", {
+                id: editingProduct.id,
+                name: editingProduct.name,
+                description: editingProduct.description,
+                kcal: editingProduct.kcal,
+                });
+                setEditingProduct(null);
+                fetchProducts();
+            } catch (error) {
+                alert("Erro ao editar produto.");
+            }
+        }
+    }
+
+    function handleEdit(product: Product) {
+        setEditingProduct(product);
+}
+
+return (
+    <div>
+        <h1>Administração de Produtos</h1>
+
+        {editingProduct && (
+            <form onSubmit={handleUpdate}>
+            <h2>Editando: {editingProduct.name}</h2>
+            <input
+                type="text"
+                value={editingProduct?.name || ""}
+                onChange={(e) =>
+                setEditingProduct(editingProduct ? { ...editingProduct, name: e.target.value } : null)
+                }
+            />
+            <input
+                type="text"
+                value={editingProduct?.description || ""}
+                onChange={(e) =>
+                setEditingProduct(
+                    editingProduct ? { ...editingProduct, description: e.target.value } : null
+                )
+                }
+            />
+            <input
+                type="number"
+                value={editingProduct?.kcal || ""}
+                onChange={(e) =>
+                setEditingProduct(
+                    editingProduct ? { ...editingProduct, kcal: Number(e.target.value) } : null
+                )
+                }
+            />
+            <button type="submit">Salvar Alterações</button>
             </form>
-        </div>
+        )}
+
+        <ul>
+            {products.map((product) => (
+            <li key={product.id}>
+                {product.name} - {product.description} - {product.kcal} kcal
+                <button onClick={() => handleEdit(product)}>Editar</button>
+                <button onClick={() => handleDelete(product.id)}>Deletar</button>
+            </li>
+            ))}
+        </ul>
+    </div>
     );
 }
